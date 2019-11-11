@@ -1,0 +1,48 @@
+enable
+configure terminal
+hostname SW-01
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS"
+enable secret SenhadaEnable
+line console 0
+password SenhadaConsole
+login
+exit
+ip domain-name grupo5.local
+username erickgrupo5 privilege 15 secret erick123
+username joaogrupo5 privilege 15 secret joao1234
+username viniciusgrupo5 privilege 15 secret vinicius123
+username thomasgrupo5 privilege 15 secret thomas123
+service password-encryption
+crypto key generate rsa general-keys modulus 1024
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit 
+ip default-gateway 192.168.250.1
+vlan 15
+name VLAN15
+vlan 105
+name VLAN105
+interface vlan 105
+ip address 192.168.250.253 255.255.255.0
+description SW-01
+no shutdown
+exit
+interface fastEthernet 0/1
+description PC-01
+switchport mode access
+switchport access vlan 15
+exit
+interface fastEthernet 0/3
+description PC-02
+switchport mode access
+switchport access vlan 15
+exit
+interface fastEthernet 0/23
+description SW-01
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 15,105,99
+exit
+do wr
